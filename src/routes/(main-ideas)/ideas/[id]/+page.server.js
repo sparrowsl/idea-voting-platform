@@ -1,6 +1,5 @@
-import { invalidateAll } from "$app/navigation";
 import db from "$lib/prisma.js";
-import { error, redirect } from "@sveltejs/kit";
+import { error, fail } from "@sveltejs/kit";
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load({ locals, params }) {
@@ -14,6 +13,9 @@ export async function load({ locals, params }) {
 	}
 
 	// @ts-ignore
+	idea.votersId = idea.votersId.split(",");
+
+	// @ts-ignore
 	return { user: locals.user, idea };
 }
 
@@ -24,11 +26,28 @@ export const actions = {
 			where: { id: params.id },
 		});
 
-		const updated = await db.idea.update({
-			where: { id: params.id },
-			data: {
-				votes: Number(idea?.votes) + 1,
-			},
-		});
+		/** @type {string[]} */
+		let voters = [];
+
+		if (idea?.votersId) {
+			const splitted = idea?.votersId.split(",");
+
+			voters = voters.concat(splitted);
+		}
+
+		voters.push(locals.user?.id);
+
+		try {
+			const updated = await db.idea.update({
+				where: { id: params.id },
+				data: {
+					votersId: voters.join(","),
+					votes: Number(idea?.votes) + 1,
+				},
+			});
+		} catch (/** @type {*} */ _e) {
+			console.log(_e);
+			return fail(400, { message: _e.message });
+		}
 	},
 };

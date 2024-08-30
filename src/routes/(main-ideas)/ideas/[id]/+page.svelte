@@ -1,6 +1,5 @@
 <script>
 	import { applyAction, enhance } from "$app/forms";
-	import { goto, invalidateAll } from "$app/navigation";
 	import Icon from "@iconify/svelte";
 	import { toast } from "svelte-sonner";
 
@@ -8,7 +7,7 @@
 
 	let voting = false;
 
-	const { idea, user } = data;
+	const { idea } = data;
 </script>
 
 <section class="p-10">
@@ -22,29 +21,35 @@
 		{idea.votes} votes
 	</p>
 
-	<p class="max-w-2xl whitespace-nowrap">{idea.description}</p>
+	<p class="max-w-xl whitespace-pre-wrap">{idea.description}</p>
 
-	<form
-		method="post"
-		class="mt-5"
-		use:enhance={() => {
-			voting = true;
+	{#if data.user}
+		{#if !idea.votersId?.includes(data.user?.id)}
+			<form
+				method="post"
+				class="mt-5"
+				use:enhance={() => {
+					voting = true;
 
-			return async ({ result }) => {
-				if (result.type === "failure") {
-					toast.error(String(result.data?.message));
-				} else if (result.type === "success") {
-					toast.success("You vote has been cast!!!!");
-					// TODO: reload the page (the correct way) and update vote count
-					window.location.reload();
-				} else {
-					await applyAction(result);
-				}
+					return async ({ result }) => {
+						if (result.type === "failure") {
+							toast.error(String(result.data?.message));
+						} else if (result.type === "success") {
+							toast.success("You vote has been cast!!!!");
+							// TODO: reload the page (the correct way) and update vote count
+							window.location.reload();
+						} else {
+							await applyAction(result);
+						}
 
-				voting = false;
-			};
-		}}
-	>
-		<button class="btn btn-sm btn-accent" disabled={voting}>vote</button>
-	</form>
+						voting = false;
+					};
+				}}
+			>
+				<button class="btn btn-sm btn-accent" disabled={voting}>vote</button>
+			</form>
+		{:else}
+			<p class="text-gray-400 italic mt-10">already voted</p>
+		{/if}
+	{/if}
 </section>

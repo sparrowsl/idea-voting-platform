@@ -49,7 +49,7 @@ export const actions = {
 				},
 			});
 		} catch (/** @type {*} */ _e) {
-			console.log("ERROR:", _e.message);
+			console.log("ERROR:", _e);
 			return fail(400, { message: _e.message });
 		}
 

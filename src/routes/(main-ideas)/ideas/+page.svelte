@@ -10,7 +10,7 @@
 			<div class="card bg-base-100 w-96 shadow-lg">
 				<div class="card-body">
 					<h2 class="font-semibold text-lg">{idea.title}</h2>
-					<p class="truncate text-sm line-clamp-6 whitespace-nowrap">
+					<p class="text-sm line-clamp-2 whitespace-pre-wrap">
 						{idea.description}
 					</p>
 					<div class="card-actions justify-between mt-5">
