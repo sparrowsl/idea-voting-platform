@@ -48,9 +48,9 @@ export const actions = {
 					email: data.email,
 					password: hashedPassword,
 				},
-				// omit: {
-				// 	password: true,
-				// },
+				omit: {
+					password: true,
+				},
 			});
 
 			// JWT the user info

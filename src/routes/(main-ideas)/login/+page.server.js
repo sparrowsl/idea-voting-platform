@@ -46,6 +46,6 @@ export const actions = {
 			return fail(400, { message: _e.message });
 		}
 
-		redirect(307, "/");
+		redirect(307, "/ideas");
 	},
 };
