@@ -28,6 +28,7 @@ model Idea {
   title       String
   description String
   votes       Int    @default(0)
+  votersId    String @map("voters_id") // array of voters id
 
   user   User?   @relation(fields: [userId], references: [id])
   userId String? @map("user_id")
